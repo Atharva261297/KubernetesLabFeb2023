@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: httpbin-rs
+  labels:
+    app: httpbin
+    env: prod
+spec:
+  # modify replicas according to your case
+  replicas: 1
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: httpbin
+        image: kennethreitz/httpbin:test
+        ports:
+          - name: web
+            containerPort: 80
+            protocol: TCP

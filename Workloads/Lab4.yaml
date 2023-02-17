@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: httpbin
+spec:
+  selector:
+    matchLabels:
+      app: httpbin # has to match .spec.template.metadata.labels
+  serviceName: "httpbin"
+  template:
+    metadata:
+      labels:
+        app: httpbin # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: httpbin
+        image: kennethreitz/httpbin:test
+        ports:
+          - name: web
+            containerPort: 80
+            protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: /mnt/ext
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
